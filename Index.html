@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Verification</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+
+background:
+linear-gradient(135deg,#050816,#0a1730,#091f3a,#07111f);
+
+background-size:400% 400%;
+animation:bgMove 12s ease infinite;
+
+font-family:Arial,Helvetica,sans-serif;
+
+overflow:hidden;
+
+height:100vh;
+
+color:white;
+
+}
+
+@keyframes bgMove{
+
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+
+}
+
+#stars{
+
+position:absolute;
+
+width:100%;
+height:100%;
+
+overflow:hidden;
+
+}
+
+.star{
+
+position:absolute;
+
+width:2px;
+height:2px;
+
+background:white;
+
+border-radius:50%;
+
+animation:twinkle 3s infinite;
+
+}
+
+@keyframes twinkle{
+
+0%,100%{
+opacity:.2;
+transform:scale(1);
+}
+
+50%{
+opacity:1;
+transform:scale(2);
+}
+
+}
+
+.glow{
+
+position:absolute;
+
+border-radius:50%;
+
+filter:blur(50px);
+
+opacity:.35;
+
+animation:float 10s ease-in-out infinite;
+
+}
+
+.g1{
+width:240px;
+height:240px;
+background:#00ff88;
+left:8%;
+top:8%;
+}
+
+.g2{
+width:320px;
+height:320px;
+background:#008cff;
+right:5%;
+top:18%;
+animation-delay:2s;
+}
+
+.g3{
+width:260px;
+height:260px;
+background:#6a00ff;
+bottom:8%;
+left:30%;
+animation-delay:4s;
+}
+
+@keyframes float{
+
+0%{transform:translateY(0px);}
+50%{transform:translateY(-40px);}
+100%{transform:translateY(0px);}
+
+}
+
+#panel{
+
+position:absolute;
+
+left:50%;
+top:50%;
+
+transform:translate(-50%,-50%);
+
+width:90%;
+max-width:700px;
+
+background:rgba(255,255,255,.07);
+
+backdrop-filter:blur(15px);
+
+border:1px solid rgba(255,255,255,.1);
+
+border-radius:25px;
+
+padding:35px;
+
+box-shadow:0 0 50px rgba(0,255,120,.2);
+
+text-align:center;
+
+}
+
+h1{
+
+font-size:42px;
+
+text-shadow:
+0 0 15px #00ff88,
+0 0 30px #00ff88;
+
+margin-bottom:15px;
+
+}
+
+#status{
+
+color:#b9c6d8;
+
+font-size:18px;
+
+margin-bottom:25px;
+
+}
+
+.progress{
+
+width:100%;
+
+height:24px;
+
+background:#222;
+
+border-radius:20px;
+
+overflow:hidden;
+
+margin-bottom:15px;
+
+}
+
+.bar{
+
+height:100%;
+
+width:0%;
+
+background:linear-gradient(90deg,#00ff88,#00bfff);
+
+transition:width .2s;
+
+}
+
+#percent{
+
+font-size:28px;
+
+font-weight:bold;
+
+margin-bottom:25px;
+
+}
+
+#terminal{
+
+background:black;
+
+border-radius:12px;
+
+padding:15px;
+
+height:170px;
+
+overflow:hidden;
+
+text-align:left;
+
+font-family:monospace;
+
+color:#00ff66;
+
+font-size:14px;
+
+box-shadow:0 0 20px rgba(0,255,100,.2);
+
+margin-bottom:25px;
+
+}
+
+button{
+
+display:none;
+
+padding:18px 45px;
+
+font-size:24px;
+
+border:none;
+
+border-radius:12px;
+
+cursor:pointer;
+
+background:linear-gradient(90deg,#00ff88,#00bfff);
+
+color:white;
+
+transition:.25s;
+
+}
+
+button:hover{
+
+transform:scale(1.05);
+
+box-shadow:0 0 20px #00ff88;
+
+}
+
+#count{
+
+display:none;
+
+position:absolute;
+
+left:50%;
+top:50%;
+
+transform:translate(-50%,-50%);
+
+font-size:130px;
+
+font-weight:bold;
+
+text-shadow:0 0 25px white;
+
+}
+
+.flash{
+
+animation:flash .15s 3;
+
+}
+
+@keyframes flash{
+
+0%{background:white;color:black;}
+50%{background:black;color:white;}
+100%{background:white;color:black;}
+
+}
+
+.shake{
+
+animation:shake .5s;
+
+}
+
+@keyframes shake{
+
+0%{transform:translate(0);}
+20%{transform:translate(-15px);}
+40%{transform:translate(15px);}
+60%{transform:translate(-10px);}
+80%{transform:translate(10px);}
+100%{transform:translate(0);}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="stars"></div>
+
+<div class="glow g1"></div>
+<div class="glow g2"></div>
+<div class="glow g3"></div>
+
+<div id="panel">
+
+<h1>AI DEVICE VERIFICATION</h1>
+
+<div id="status">
+Initializing Neural Scanner...
+</div>
+
+<div class="progress">
+<div class="bar" id="bar"></div>
+</div>
+
+<div id="percent">
+0%
+</div>
+
+<div id="terminal">
+</div>
+
+<button id="continue" onclick="startCountdown()">
+Continue
+</button>
+
+</div>
+
+<div id="count"></div>
+
+<audio id="sound" src="Mommyasmr.mp3"></audio>
+
+<script>
+
+const stars=document.getElementById("stars");
+
+for(let i=0;i<150;i++){
+
+const s=document.createElement("div");
+
+s.className="star";
+
+s.style.left=Math.random()*100+"%";
+s.style.top=Math.random()*100+"%";
+
+s.style.animationDelay=Math.random()*3+"s";
+
+stars.appendChild(s);
+
+}
+
+const logs=[
+
+"Connecting to AI Core...",
+"Checking storage...",
+"Analyzing memory...",
+"Inspecting permissions...",
+"Verifying GPU...",
+"Scanning applications...",
+"Checking internet...",
+"Running diagnostics...",
+"Optimizing performance...",
+"Loading neural engine...",
+"Performing final checks...",
+"Verification successful."
+
+];
+
+let logIndex=0;
+
+const terminal=document.getElementById("terminal");
+
+const percent=document.getElementById("percent");
+
+const bar=document.getElementById("bar");
+
+const status=document.getElementById("status");
+
+let p=0;
+
+const loading=setInterval(()=>{
+
+p++;
+
+percent.innerHTML=p+"%";
+
+bar.style.width=p+"%";
+
+if(p%8===0 && logIndex<logs.length){
+
+terminal.innerHTML+=logs[logIndex]+"<br>";
+
+terminal.scrollTop=terminal.scrollHeight;
+
+status.innerHTML=logs[logIndex];
+
+logIndex++;
+
+}
+
+if(p>=100){
+
+clearInterval(loading);
+
+status.innerHTML="Verification Complete ✔";
+
+document.getElementById("continue").style.display="inline-block";
+
+}
+
+},70); function startCountdown(){
+
+document.getElementById("panel").style.display="none";
+
+const count=document.getElementById("count");
+count.style.display="block";
+
+let n=3;
+
+count.innerHTML=n;
+
+const timer=setInterval(()=>{
+
+n--;
+
+if(n>0){
+
+count.innerHTML=n;
+
+}else if(n===0){
+
+count.innerHTML="GO!";
+
+}else{
+
+clearInterval(timer);
+
+count.style.display="none";
+
+document.body.classList.add("flash");
+document.body.classList.add("shake");
+
+document.getElementById("sound").play();
+
+setTimeout(()=>{
+
+document.body.classList.remove("flash");
+document.body.classList.remove("shake");
+
+const msg=document.createElement("div");
+
+msg.style.position="absolute";
+msg.style.left="50%";
+msg.style.top="50%";
+msg.style.transform="translate(-50%,-50%)";
+msg.style.fontSize="42px";
+msg.style.fontWeight="bold";
+msg.style.color="#00ff88";
+msg.style.textShadow="0 0 20px #00ff88";
+msg.innerHTML="🎉 Verification Complete 🎉";
+
+document.body.appendChild(msg);
+
+},600);
+
+}
+
+},1000);
+
+}
+
+</script>
+
+</body>
+</html>
